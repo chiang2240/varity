@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* ========== CSS 變數與基礎 ========== */
+    :root {
+      --bg: #f0f2f5;
+      --card-bg: #ffffff;
+      --text: #1a1a2e;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.2s ease;
+
+      /* 分類色碼 */
+      --cat-phone: #4A90D9;
+      --cat-email: #E67E22;
+      --cat-sample: #27AE60;
+      --cat-quote: #8E44AD;
+      --cat-company: #E74C3C;
+      --cat-customer: #F39C12;
+
+      /* 狀態色碼 */
+      --status-pending: #95A5A6;
+      --status-progress: #3498DB;
+      --status-done: #2ECC71;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ========== 頂部導航 ========== */
+    .navbar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 20px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .navbar-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .navbar h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .date-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.2);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+    }
+
+    .date-nav button {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .date-nav button:hover { background: rgba(255,255,255,0.3); }
+
+    .date-nav input[type="date"] {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 6px 8px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .date-nav input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
+    .btn-today {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .btn-today:hover { background: rgba(255,255,255,0.35); }
+
+    .btn-add {
+      background: #fff;
+      color: #764ba2;
+      border: none;
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* ========== 統計卡片 ========== */
+    .stats-bar {
+      max-width: 960px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border-top: 3px solid var(--cat-color);
+      transition: var(--transition);
+      cursor: default;
+    }
+
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+    .stat-card .stat-count {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--cat-color);
+    }
+
+    .stat-card .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* ========== 主要內容 ========== */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 24px 80px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .empty-state p {
+      font-size: 16px;
+    }
+
+    /* ========== 日誌卡片 ========== */
+    .entry-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .entry-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--cat-color);
+      transition: var(--transition);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .entry-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateX(4px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .entry-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .category-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--cat-color);
+    }
+
+    .entry-title {
+      font-size: 17px;
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      color: #fff;
+    }
+
+    .status-pill:hover {
+      filter: brightness(1.1);
+      transform: scale(1.05);
+    }
+
+    .status-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+    }
+
+    .status-pending { background: var(--status-pending); }
+    .status-progress { background: var(--status-progress); }
+    .status-done { background: var(--status-done); }
+
+    .entry-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .entry-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .entry-time {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .entry-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: none;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-icon:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .btn-icon.btn-delete:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    /* ========== Modal ========== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 520px;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .btn-close:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .modal-body { padding: 24px; }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      transition: var(--transition);
+      background: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* 狀態選擇器 */
+    .status-selector {
+      display: flex;
+      gap: 8px;
+    }
+
+    .status-option {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+    }
+
+    .status-option:hover { border-color: #ccc; }
+
+    .status-option.selected {
+      color: #fff;
+    }
+
+    .status-option[data-status="未開始"].selected {
+      background: var(--status-pending);
+      border-color: var(--status-pending);
+    }
+
+    .status-option[data-status="進行中"].selected {
+      background: var(--status-progress);
+      border-color: var(--status-progress);
+    }
+
+    .status-option[data-status="已完成"].selected {
+      background: var(--status-done);
+      border-color: var(--status-done);
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover { background: #e5e7eb; }
+
+    .btn-danger {
+      background: #dc2626;
+      color: #fff;
+    }
+
+    .btn-danger:hover { background: #b91c1c; }
+
+    /* ========== Loading ========== */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ========== Toast 通知 ========== */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: #333;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      box-shadow: var(--shadow-lg);
+      animation: toastIn 0.3s ease;
+      max-width: 320px;
+    }
+
+    .toast.success { background: #059669; }
+    .toast.error { background: #dc2626; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ========== 響應式 ========== */
+    @media (max-width: 600px) {
+      .navbar { padding: 16px; }
+      .navbar h1 { font-size: 20px; margin-bottom: 12px; }
+      .navbar-controls { gap: 8px; }
+      .btn-add { margin-left: 0; width: 100%; justify-content: center; }
+      .stats-bar { grid-template-columns: repeat(3, 1fr); padding: 0 16px; }
+      .container { padding: 16px 16px 80px; }
+      .entry-card { padding: 14px 16px; }
+      .entry-title { font-size: 15px; }
+      .status-selector { flex-direction: column; }
+      .modal { margin: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頂部導航 -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <h1>&#128221; 業務日誌</h1>
+      <div class="navbar-controls">
+        <div class="date-nav">
+          <button onclick="changeDate(-1)" title="前一天">&#9664;</button>
+          <input type="date" id="dateFilter" onchange="loadEntries()">
+          <button onclick="changeDate(1)" title="後一天">&#9654;</button>
+        </div>
+        <button class="btn-today" onclick="goToday()">今天</button>
+        <button class="btn-add" onclick="openAddModal()">&#10010; 新增日誌</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 統計卡片 -->
+  <div class="stats-bar">
+    <div class="stat-card" style="--cat-color: var(--cat-phone)">
+      <div class="stat-count" id="stat-電話">0</div>
+      <div class="stat-label">電話</div>
+    </div>
+    <div class="stat-card" style="--cat-color: var(--cat-email)">
+      <div class="stat-count" id="stat-郵件">0</div>
+      <div class="stat-label">郵件</div>
+    </div>
+    <div class="stat-card" style="--cat-color: var(--cat-sample)">
+      <div class="stat-count" id="stat-送樣">0</div>
+      <div class="stat-label">送樣</div>
+    </div>
+    <div class="stat-card" style="--cat-color: var(--cat-quote)">
+      <div class="stat-count" id="stat-報價">0</div>
+      <div class="stat-label">報價</div>
+    </div>
+    <div class="stat-card" style="--cat-color: var(--cat-company)">
+      <div class="stat-count" id="stat-公司任務">0</div>
+      <div class="stat-label">公司任務</div>
+    </div>
+    <div class="stat-card" style="--cat-color: var(--cat-customer)">
+      <div class="stat-count" id="stat-客戶任務">0</div>
+      <div class="stat-label">客戶任務</div>
+    </div>
+  </div>
+
+  <!-- 日誌列表 -->
+  <div class="container">
+    <div id="entryList"></div>
+  </div>
+
+  <!-- 新增/編輯 Modal -->
+  <div class="modal-overlay" id="entryModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">新增日誌</h2>
+        <button class="btn-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="entryId">
+
+        <div class="form-group">
+          <label>日期</label>
+          <input type="date" id="entryDate">
+        </div>
+
+        <div class="form-group">
+          <label>分類</label>
+          <select id="entryCategory">
+            <option value="電話">&#128222; 電話</option>
+            <option value="郵件">&#9993; 郵件</option>
+            <option value="送樣">&#128230; 送樣</option>
+            <option value="報價">&#128176; 報價</option>
+            <option value="公司任務">&#127970; 公司任務</option>
+            <option value="客戶任務">&#129309; 客戶任務</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>標題</label>
+          <input type="text" id="entryTitleInput" placeholder="輸入日誌標題...">
+        </div>
+
+        <div class="form-group">
+          <label>描述</label>
+          <textarea id="entryDesc" placeholder="輸入詳細描述（選填）..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>進度狀態</label>
+          <div class="status-selector">
+            <div class="status-option selected" data-status="未開始" onclick="selectStatus(this)">未開始</div>
+            <div class="status-option" data-status="進行中" onclick="selectStatus(this)">進行中</div>
+            <div class="status-option" data-status="已完成" onclick="selectStatus(this)">已完成</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+        <button class="btn btn-primary" id="btnSave" onclick="saveEntry()">儲存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 刪除確認 Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>確認刪除</h2>
+        <button class="btn-close" onclick="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>確定要刪除「<strong id="deleteItemTitle"></strong>」嗎？此操作無法復原。</p>
+        <input type="hidden" id="deleteItemId">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeDeleteModal()">取消</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">刪除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 容器 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    /* ========== 常量 ========== */
+    var CATEGORIES = {
+      '電話':   { icon: '\u{1F4DE}', color: 'var(--cat-phone)' },
+      '郵件':   { icon: '\u2709',     color: 'var(--cat-email)' },
+      '送樣':   { icon: '\u{1F4E6}', color: 'var(--cat-sample)' },
+      '報價':   { icon: '\u{1F4B0}', color: 'var(--cat-quote)' },
+      '公司任務': { icon: '\u{1F3E2}', color: 'var(--cat-company)' },
+      '客戶任務': { icon: '\u{1F91D}', color: 'var(--cat-customer)' }
+    };
+
+    var STATUS_MAP = {
+      '未開始': 'status-pending',
+      '進行中': 'status-progress',
+      '已完成': 'status-done'
+    };
+
+    var STATUS_CYCLE = ['未開始', '進行中', '已完成'];
+
+    var currentEntries = [];
+
+    /* ========== 初始化 ========== */
+    document.addEventListener('DOMContentLoaded', function() {
+      goToday();
+    });
+
+    /* ========== 日期操作 ========== */
+    function getTodayStr() {
+      var d = new Date();
+      return d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0');
+    }
+
+    function goToday() {
+      document.getElementById('dateFilter').value = getTodayStr();
+      loadEntries();
+    }
+
+    function changeDate(delta) {
+      var input = document.getElementById('dateFilter');
+      var d = new Date(input.value);
+      d.setDate(d.getDate() + delta);
+      input.value = d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0');
+      loadEntries();
+    }
+
+    /* ========== 載入資料 ========== */
+    function loadEntries() {
+      var date = document.getElementById('dateFilter').value;
+      var listEl = document.getElementById('entryList');
+      listEl.innerHTML = '<div class="loading"><div class="spinner"></div>載入中...</div>';
+
+      google.script.run
+        .withSuccessHandler(function(entries) {
+          currentEntries = entries || [];
+          renderEntries(currentEntries);
+          updateStats(currentEntries);
+        })
+        .withFailureHandler(function(err) {
+          listEl.innerHTML = '<div class="empty-state"><p>載入失敗：' + err.message + '</p></div>';
+          showToast('載入失敗', 'error');
+        })
+        .getEntries(date);
+    }
+
+    /* ========== 渲染列表 ========== */
+    function renderEntries(entries) {
+      var listEl = document.getElementById('entryList');
+
+      if (!entries || entries.length === 0) {
+        listEl.innerHTML =
+          '<div class="empty-state">' +
+            '<div class="empty-icon">\u{1F4CB}</div>' +
+            '<p>今天還沒有日誌記錄</p>' +
+            '<p style="margin-top:8px;font-size:14px;">點擊「新增日誌」開始記錄吧！</p>' +
+          '</div>';
+        return;
+      }
+
+      var html = '<div class="entry-list">';
+
+      entries.forEach(function(entry) {
+        var cat = CATEGORIES[entry.category] || { icon: '\u{1F4CC}', color: '#999' };
+        var statusClass = STATUS_MAP[entry.status] || 'status-pending';
+        var timeStr = entry.createdAt ? formatTime(entry.createdAt) : '';
+
+        html +=
+          '<div class="entry-card" style="--cat-color: ' + cat.color + '">' +
+            '<div class="entry-header">' +
+              '<span class="category-tag" style="--cat-color: ' + cat.color + '; background: ' + cat.color + '">' +
+                cat.icon + ' ' + entry.category +
+              '</span>' +
+              '<span class="entry-title">' + escapeHtml(entry.title) + '</span>' +
+              '<button class="status-pill ' + statusClass + '" onclick="cycleStatus(\'' + entry.id + '\', \'' + entry.status + '\')" title="點擊切換狀態">' +
+                '<span class="dot"></span>' + entry.status +
+              '</button>' +
+            '</div>' +
+            (entry.description ?
+              '<div class="entry-desc">' + escapeHtml(entry.description) + '</div>' : '') +
+            '<div class="entry-footer">' +
+              '<span class="entry-time">' + timeStr + '</span>' +
+              '<div class="entry-actions">' +
+                '<button class="btn-icon" onclick=\'openEditModal(' + JSON.stringify(entry).replace(/'/g, "\\&#39;") + ')\'>' +
+                  '\u270F\uFE0F 編輯</button>' +
+                '<button class="btn-icon btn-delete" onclick="openDeleteModal(\'' + entry.id + '\', \'' + escapeHtml(entry.title) + '\')">' +
+                  '\u{1F5D1}\uFE0F 刪除</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      });
+
+      html += '</div>';
+      listEl.innerHTML = html;
+    }
+
+    /* ========== 統計更新 ========== */
+    function updateStats(entries) {
+      var counts = {};
+      Object.keys(CATEGORIES).forEach(function(k) { counts[k] = 0; });
+
+      entries.forEach(function(e) {
+        if (counts[e.category] !== undefined) {
+          counts[e.category]++;
+        }
+      });
+
+      Object.keys(counts).forEach(function(k) {
+        var el = document.getElementById('stat-' + k);
+        if (el) el.textContent = counts[k];
+      });
+    }
+
+    /* ========== Modal 操作 ========== */
+    function openAddModal() {
+      document.getElementById('modalTitle').textContent = '新增日誌';
+      document.getElementById('entryId').value = '';
+      document.getElementById('entryDate').value = document.getElementById('dateFilter').value;
+      document.getElementById('entryCategory').value = '電話';
+      document.getElementById('entryTitleInput').value = '';
+      document.getElementById('entryDesc').value = '';
+      selectStatusByValue('未開始');
+      document.getElementById('entryModal').classList.add('active');
+      document.getElementById('entryTitleInput').focus();
+    }
+
+    function openEditModal(entry) {
+      document.getElementById('modalTitle').textContent = '編輯日誌';
+      document.getElementById('entryId').value = entry.id;
+      document.getElementById('entryDate').value = entry.date;
+      document.getElementById('entryCategory').value = entry.category;
+      document.getElementById('entryTitleInput').value = entry.title;
+      document.getElementById('entryDesc').value = entry.description || '';
+      selectStatusByValue(entry.status);
+      document.getElementById('entryModal').classList.add('active');
+      document.getElementById('entryTitleInput').focus();
+    }
+
+    function closeModal() {
+      document.getElementById('entryModal').classList.remove('active');
+    }
+
+    /* ========== 狀態選擇器 ========== */
+    function selectStatus(el) {
+      var options = el.parentElement.querySelectorAll('.status-option');
+      options.forEach(function(opt) { opt.classList.remove('selected'); });
+      el.classList.add('selected');
+    }
+
+    function selectStatusByValue(status) {
+      var options = document.querySelectorAll('.status-selector .status-option');
+      options.forEach(function(opt) {
+        opt.classList.toggle('selected', opt.dataset.status === status);
+      });
+    }
+
+    function getSelectedStatus() {
+      var selected = document.querySelector('.status-option.selected');
+      return selected ? selected.dataset.status : '未開始';
+    }
+
+    /* ========== 儲存 ========== */
+    function saveEntry() {
+      var title = document.getElementById('entryTitleInput').value.trim();
+      if (!title) {
+        showToast('請輸入標題', 'error');
+        document.getElementById('entryTitleInput').focus();
+        return;
+      }
+
+      var data = {
+        id: document.getElementById('entryId').value,
+        date: document.getElementById('entryDate').value,
+        category: document.getElementById('entryCategory').value,
+        title: title,
+        description: document.getElementById('entryDesc').value.trim(),
+        status: getSelectedStatus()
+      };
+
+      var btnSave = document.getElementById('btnSave');
+      btnSave.disabled = true;
+      btnSave.textContent = '儲存中...';
+
+      var isEdit = !!data.id;
+      var handler = isEdit ? 'updateEntry' : 'addEntry';
+
+      google.script.run
+        .withSuccessHandler(function() {
+          closeModal();
+          loadEntries();
+          showToast(isEdit ? '已更新' : '已新增', 'success');
+          btnSave.disabled = false;
+          btnSave.textContent = '儲存';
+        })
+        .withFailureHandler(function(err) {
+          showToast('儲存失敗：' + err.message, 'error');
+          btnSave.disabled = false;
+          btnSave.textContent = '儲存';
+        })
+        [handler](data);
+    }
+
+    /* ========== 快速切換狀態 ========== */
+    function cycleStatus(id, currentStatus) {
+      var idx = STATUS_CYCLE.indexOf(currentStatus);
+      var nextStatus = STATUS_CYCLE[(idx + 1) % STATUS_CYCLE.length];
+
+      google.script.run
+        .withSuccessHandler(function() {
+          loadEntries();
+          showToast('狀態更新為「' + nextStatus + '」', 'success');
+        })
+        .withFailureHandler(function(err) {
+          showToast('更新失敗：' + err.message, 'error');
+        })
+        .updateStatus(id, nextStatus);
+    }
+
+    /* ========== 刪除 ========== */
+    function openDeleteModal(id, title) {
+      document.getElementById('deleteItemId').value = id;
+      document.getElementById('deleteItemTitle').textContent = title;
+      document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteModal').classList.remove('active');
+    }
+
+    function confirmDelete() {
+      var id = document.getElementById('deleteItemId').value;
+
+      google.script.run
+        .withSuccessHandler(function() {
+          closeDeleteModal();
+          loadEntries();
+          showToast('已刪除', 'success');
+        })
+        .withFailureHandler(function(err) {
+          showToast('刪除失敗：' + err.message, 'error');
+          closeDeleteModal();
+        })
+        .deleteEntry(id);
+    }
+
+    /* ========== 工具函數 ========== */
+    function escapeHtml(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function formatTime(isoStr) {
+      try {
+        var d = new Date(isoStr);
+        return String(d.getHours()).padStart(2, '0') + ':' +
+               String(d.getMinutes()).padStart(2, '0');
+      } catch(e) {
+        return '';
+      }
+    }
+
+    function showToast(message, type) {
+      var container = document.getElementById('toastContainer');
+      var toast = document.createElement('div');
+      toast.className = 'toast ' + (type || '');
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 2500);
+    }
+
+    /* ========== 鍵盤快捷鍵 ========== */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeDeleteModal();
+      }
+    });
+
+    /* 點擊 overlay 關閉 */
+    document.getElementById('entryModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDeleteModal();
+    });
+  </script>
+</body>
+</html>
