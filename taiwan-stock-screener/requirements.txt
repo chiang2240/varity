@@ -1,0 +1,17 @@
+# Taiwan Stock Screener Bot - Dependencies
+# 台股巴菲特篩選機器人套件需求
+
+# HTTP & API
+requests>=2.31.0
+
+# Data Processing
+pandas>=2.1.0
+numpy>=1.26.0
+
+# Scheduling
+schedule>=1.2.0
+
+# Optional: Jupyter notebook support for analysis
+# jupyter>=1.0.0
+# matplotlib>=3.8.0
+# seaborn>=0.13.0
